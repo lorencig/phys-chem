@@ -203,6 +203,7 @@ def app():
     elif model_choice == "Temkin Isotherm":
         st.markdown("""
         <div style="text-align: justify;">
+                    
         # Temkin Isotherm
 
         ## 1. Author, Year

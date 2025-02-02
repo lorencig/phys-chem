@@ -8,7 +8,7 @@ PAGES = {
     "Simulation": "simulation",
     "Model Recommendation": "model_recommendation", 
     #"Data Analysis": "data_analysis",
-    #"Case Studies": "case_studies",
+    "Case Studies": "case_studies",
     "Quiz": "quiz"
 }
 

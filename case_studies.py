@@ -112,12 +112,6 @@ def app():
             - **HKUST-1:** \$200 per kg (copper-based, moderate cost)
             - **MOF-5:**   \$300 per kg (zinc-based, high purity)
             - **UiO-66:**  \$150 per kg (zirconium-based, economical)
-            
-            **Other Operating Costs:**
-            
-            - **Compression:** 2-5 kWh per kg of H₂
-            - **Cooling:** 0.5-1.5 kWh per kg of H₂
-            - **Maintenance:** Approximately 2\% of the capital cost per year
             """)
         
        # Detailed Step-by-Step Solution with Expanded Explanations

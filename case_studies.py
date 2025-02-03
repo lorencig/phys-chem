@@ -10,23 +10,22 @@ def app():
     # -------------------------------------------------------------------------
     # CASE STUDY: Hydrogen Storage in Metal-Organic Frameworks (MOFs)
     if case_study == "Gas Storage":
-        
+    
         # Title and Introduction
         st.markdown("## Hydrogen Storage in Metal-Organic Frameworks (MOFs)")
         st.write("""
-        In this case study, we aim to design a hydrogen (H₂) storage system using MOFs.
-        The problem is divided into three main objectives:
+        This case study focuses on designing a hydrogen (H₂) storage system using MOFs. The problem is divided into three main objectives:
         
         1. **Determine the H₂ Storage Capacity:**  
         Calculate the maximum amount of H₂ (by weight percentage) that the chosen MOF can store at a given temperature and pressure.
         
         2. **Compute the Required MOF Amount:**  
-        Figure out how many kilograms of the MOF material are needed to store a specified mass of H₂.
+        Determine the mass of MOF material needed to store a specified amount of H₂.
         
         3. **Estimate the Material Cost:**  
-        Determine the total cost of the MOF material required for the storage system.
+        Calculate the total cost of the MOF material required for the storage system.
         
-        We will adjust a base capacity using a formula that accounts for deviations in pressure and temperature from the reference conditions.
+        The base capacity is adjusted using a formula that accounts for deviations in pressure and temperature from the reference conditions.
         """)
         
         # Problem Statement Section with Clear Objectives
@@ -48,16 +47,16 @@ def app():
         # Explanation of the Formula
         st.markdown("### 📝 Formula Explanation")
         st.markdown(r"""
-        We use the following formula to adjust the base H₂ storage capacity of a MOF:
+        The adjusted H₂ storage capacity is calculated using the following formula:
         
         $$
         \text{Capacity (wt\%)} = \text{Reference Capacity} \times \frac{\text{Pressure}}{50} \times \frac{77}{\text{Temperature}}
         $$
         
         **Where:**
-        - **Reference Capacity:** The base H₂ storage capacity of the MOF at the standard conditions (77 K and 50 bar).
-        - **Pressure Adjustment ($\frac{\text{Pressure}}{50}$)**: Scales the capacity based on the actual operating pressure relative to the reference pressure.
-        - **Temperature Adjustment ($\frac{77}{\text{Temperature}}$)**: Scales the capacity based on the actual operating temperature relative to the reference temperature (77 K).
+        - **Reference Capacity:** The base H₂ storage capacity of the MOF at standard conditions (77 K and 50 bar).
+        - **Pressure Adjustment ($\frac{\text{Pressure}}{50}$):** Scales the capacity based on the actual operating pressure relative to the reference pressure.
+        - **Temperature Adjustment ($\frac{77}{\text{Temperature}}$):** Scales the capacity based on the actual operating temperature relative to the reference temperature (77 K).
         
         This formula assumes that the storage capacity increases linearly with pressure and decreases with increasing temperature.
         """)
@@ -73,6 +72,12 @@ def app():
             "UiO-66":  {"surface_area": 1200, "pore_volume": 0.5,  "h2_capacity": 1.8}
         }
         props = mof_properties[mof_type]
+        
+        # Display Reference Capacity
+        st.markdown(f"""
+        **Reference Capacity for {mof_type}:**  
+        The reference capacity of the selected MOF (**{mof_type}**) is **{props['h2_capacity']} wt%** at **77 K** and **50 bar**.
+        """)
         
         # Sliders for Operating Conditions and System Scale
         col1, col2, col3 = st.columns(3)
@@ -114,68 +119,68 @@ def app():
             - **UiO-66:**  \$150 per kg (zirconium-based, economical)
             """)
         
-       # Detailed Step-by-Step Solution with Expanded Explanations
-    if st.checkbox("Show Detailed Solution"):
-        st.markdown("### 🔍 Detailed Step-by-Step Solution")
-        
-        # Step 1: Calculate the Adjusted H₂ Storage Capacity
-        st.markdown("#### Step 1: Calculate H₂ Storage Capacity")
-        capacity = props["h2_capacity"] * (pressure / 50) * (77 / temperature)
-        volumetric_capacity = capacity * 0.08988  # Conversion from wt% to kg/m³
-        
-        st.write("We start with the reference capacity of the selected MOF and adjust it based on the actual operating conditions.")
-        st.write(f"- **Reference Capacity:** {props['h2_capacity']} wt% (for {mof_type} at 77K and 50 bar)")
-        st.write(f"- **Pressure Adjustment:** Current pressure is {pressure} bar, so the factor is $\\frac{{{pressure}}}{{50}}$.")
-        st.write(f"- **Temperature Adjustment:** Current temperature is {temperature} K, so the factor is $\\frac{{77}}{{{temperature}}}$.")
-        
-        st.latex(r"\text{Capacity} = " + f"{props['h2_capacity']} \\times \\frac{{{pressure}}}{{50}} \\times \\frac{{77}}{{{temperature}}} = {capacity:.2f}\\,wt\%")
-        st.write(f"This result means that under the given conditions, the MOF can store **{capacity:.2f} wt%** of its weight as H₂.")
-        
-        st.write("Additionally, multiplying by the conversion factor (0.08988) gives the volumetric capacity:")
-        st.latex(r"\text{Volumetric Capacity} = " + f"{capacity:.2f} \\times 0.08988 = {volumetric_capacity:.2f}\\,kg/m^3")
-        st.write("This value indicates the mass of H₂ that can be stored per cubic meter of MOF material.")
-        
-        # Step 2: Determine the Amount of MOF Required and Its Cost
-        st.markdown("#### Step 2: Calculate Required MOF Material and Material Cost")
-        # Calculate the MOF required by dividing the desired mass of H₂ by the fraction (capacity/100)
-        mof_required = system_scale / (capacity / 100)
-        mof_costs = {"HKUST-1": 200, "MOF-5": 300, "UiO-66": 150}
-        material_cost = mof_required * mof_costs[mof_type]
-        
-        st.write(f"To store **{system_scale} kg** of H₂, the amount of MOF required is computed as:")
-        st.latex(r"\text{MOF Required (kg)} = \frac{\text{System Scale (kg H₂)}}{\text{Capacity (wt\%)} / 100}")
-        st.latex(r"\text{MOF Required} = \frac{" + f"{system_scale}" + r"}{" + f"{capacity/100:.2f}" + r"} = " + f"{mof_required:.1f}\\,kg")
-        st.write(f"This means you need **{mof_required:.1f} kg** of {mof_type}.")
-        
-        st.write("Next, we calculate the material cost using the cost per kilogram for the selected MOF:")
-        st.latex(r"\text{Material Cost} = \text{MOF Required} \times \text{Cost per kg}")
-        st.latex(r"\text{Material Cost} = " + f"{mof_required:.1f} \\times {mof_costs[mof_type]} = \\${material_cost:,.2f}")
-        st.write(f"The total material cost for {mof_type} is **${material_cost:,.2f}**.")
-        
-        # Step 3: Summarize the Results
-        st.markdown("#### Step 3: Summary of Results")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Gravimetric Capacity", f"{capacity:.2f} wt%")
-            st.metric("Volumetric Capacity", f"{volumetric_capacity:.2f} kg/m³")
-        with col2:
-            st.metric("Required MOF", f"{mof_required:.1f} kg")
-            st.metric("Material Cost", f"${material_cost:,.2f}")
-        
-        st.markdown("**Conclusion:**")
-        st.write(f"""
-        - **Storage Capacity:**  
-        The selected MOF (**{mof_type}**) has an adjusted hydrogen storage capacity of **{capacity:.2f} wt%** at {temperature} K and {pressure} bar.
-        
-        - **MOF Material Requirement:**  
-        To store **{system_scale} kg** of H₂, you need **{mof_required:.1f} kg** of the MOF.
-        
-        - **Cost Analysis:**  
-        The material cost for the required amount of {mof_type} is **${material_cost:,.2f}**.
-        
-        - **Volumetric Efficiency:**  
-        The volumetric capacity is **{volumetric_capacity:.2f} kg/m³**, which helps evaluate the space utilization of the storage system.
-        """)
+        # Detailed Step-by-Step Solution with Expanded Explanations
+        if st.checkbox("Show Detailed Solution"):
+            st.markdown("### 🔍 Detailed Step-by-Step Solution")
+            
+            # Step 1: Calculate the Adjusted H₂ Storage Capacity
+            st.markdown("#### Step 1: Calculate H₂ Storage Capacity")
+            capacity = props["h2_capacity"] * (pressure / 50) * (77 / temperature)
+            volumetric_capacity = capacity * 0.08988  # Conversion from wt% to kg/m³
+            
+            st.write("We start with the reference capacity of the selected MOF and adjust it based on the actual operating conditions.")
+            st.write(f"- **Reference Capacity:** {props['h2_capacity']} wt% (for {mof_type} at 77K and 50 bar)")
+            st.write(f"- **Pressure Adjustment:** Current pressure is {pressure} bar, so the factor is $\\frac{{{pressure}}}{{50}}$.")
+            st.write(f"- **Temperature Adjustment:** Current temperature is {temperature} K, so the factor is $\\frac{{77}}{{{temperature}}}$.")
+            
+            st.latex(r"\text{Capacity} = " + f"{props['h2_capacity']} \\times \\frac{{{pressure}}}{{50}} \\times \\frac{{77}}{{{temperature}}} = {capacity:.2f}\\,wt\%")
+            st.write(f"This result means that under the given conditions, the MOF can store **{capacity:.2f} wt%** of its weight as H₂.")
+            
+            st.write("Additionally, multiplying by the conversion factor (0.08988) gives the volumetric capacity:")
+            st.latex(r"\text{Volumetric Capacity} = " + f"{capacity:.2f} \\times 0.08988 = {volumetric_capacity:.2f}\\,kg/m^3")
+            st.write("This value indicates the mass of H₂ that can be stored per cubic meter of MOF material.")
+            
+            # Step 2: Determine the Amount of MOF Required and Its Cost
+            st.markdown("#### Step 2: Calculate Required MOF Material and Material Cost")
+            mof_required = system_scale / (capacity / 100)
+            mof_costs = {"HKUST-1": 200, "MOF-5": 300, "UiO-66": 150}
+            material_cost = mof_required * mof_costs[mof_type]
+            
+            st.write(f"To store **{system_scale} kg** of H₂, the amount of MOF required is computed as:")
+            st.latex(r"\text{MOF Required (kg)} = \frac{\text{System Scale (kg H₂)}}{\text{Capacity (wt\%)} / 100}")
+            st.latex(r"\text{MOF Required} = \frac{" + f"{system_scale}" + r"}{" + f"{capacity/100:.2f}" + r"} = " + f"{mof_required:.1f}\\,kg")
+            st.write(f"This means you need **{mof_required:.1f} kg** of {mof_type}.")
+            
+            st.write("Next, we calculate the material cost using the cost per kilogram for the selected MOF:")
+            st.latex(r"\text{Material Cost} = \text{MOF Required} \times \text{Cost per kg}")
+            st.latex(r"\text{Material Cost} = " + f"{mof_required:.1f} \\times {mof_costs[mof_type]} = \\${material_cost:,.2f}")
+            st.write(f"The total material cost for {mof_type} is **${material_cost:,.2f}**.")
+            
+            # Step 3: Summarize the Results
+            st.markdown("#### Step 3: Summary of Results")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Gravimetric Capacity", f"{capacity:.2f} wt%")
+                st.metric("Volumetric Capacity", f"{volumetric_capacity:.2f} kg/m³")
+            with col2:
+                st.metric("Required MOF", f"{mof_required:.1f} kg")
+                st.metric("Material Cost", f"${material_cost:,.2f}")
+            
+            st.markdown("**Conclusion:**")
+            st.write(f"""
+            - **Storage Capacity:**  
+            The selected MOF (**{mof_type}**) has an adjusted hydrogen storage capacity of **{capacity:.2f} wt%** at {temperature} K and {pressure} bar.
+            
+            - **MOF Material Requirement:**  
+            To store **{system_scale} kg** of H₂, you need **{mof_required:.1f} kg** of the MOF.
+            
+            - **Cost Analysis:**  
+            The material cost for the required amount of {mof_type} is **${material_cost:,.2f}**.
+            
+            - **Volumetric Efficiency:**  
+            The volumetric capacity is **{volumetric_capacity:.2f} kg/m³**, which helps evaluate the space utilization of the storage system.
+            """)
+
 
     # -------------------------------------------------------------------------
     # WATER TREATMENT
